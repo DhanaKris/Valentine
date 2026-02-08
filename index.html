@@ -72,7 +72,6 @@
       top: 0;
     }
 
-    /* Celebration screen */
     .celebration {
       display: none;
       position: fixed;
@@ -99,22 +98,20 @@
       margin-bottom: 40px;
     }
 
-    /* Falling roses */
-    .rose {
+    .rose, .bigHeart {
       position: absolute;
-      font-size: 32px;
-      animation: fall 6s linear infinite;
       user-select: none;
       pointer-events: none;
     }
 
-    /* Heavy hearts rain */
+    .rose {
+      font-size: 32px;
+      animation: fall 6s linear infinite;
+    }
+
     .bigHeart {
-      position: absolute;
       font-size: 28px;
       animation: fall 5s linear infinite;
-      user-select: none;
-      pointer-events: none;
     }
 
     @keyframes fall {
@@ -125,7 +122,6 @@
 </head>
 <body>
 
-  <!-- Main Question Card -->
   <div class="card" id="mainCard">
     <h1>Will you be my Valentine? 💖</h1>
     <div class="buttons" id="buttonArea">
@@ -134,7 +130,6 @@
     </div>
   </div>
 
-  <!-- Celebration Screen -->
   <div class="celebration" id="celebration">
     <h1>YAYYYY!!! 💕🥰</h1>
     <p>You just made my heart the happiest 💖</p>
@@ -145,21 +140,33 @@
     const mainCard = document.getElementById("mainCard");
     const celebration = document.getElementById("celebration");
 
-    // NO button moves anywhere on the screen when hovered
-    noBtn.addEventListener("mouseenter", () => {
-      const btnWidth = noBtn.offsetWidth;
-      const btnHeight = noBtn.offsetHeight;
-      const maxX = window.innerWidth - btnWidth;
-      const maxY = window.innerHeight - btnHeight;
+    // NO button moves based on mouse position
+    document.addEventListener("mousemove", (e) => {
+      const rect = noBtn.getBoundingClientRect();
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      const btnX = rect.left + rect.width / 2;
+      const btnY = rect.top + rect.height / 2;
 
-      const randomX = Math.random() * maxX;
-      const randomY = Math.random() * maxY;
+      const distance = Math.hypot(mouseX - btnX, mouseY - btnY);
 
-      noBtn.style.left = randomX + "px";
-      noBtn.style.top = randomY + "px";
+      if (distance < 150) { // closer = move
+        const offsetX = (btnX - mouseX) / distance * 100;
+        const offsetY = (btnY - mouseY) / distance * 100;
+
+        let newX = rect.left + offsetX;
+        let newY = rect.top + offsetY;
+
+        // keep button fully inside viewport
+        newX = Math.min(Math.max(0, newX), window.innerWidth - rect.width);
+        newY = Math.min(Math.max(0, newY), window.innerHeight - rect.height);
+
+        noBtn.style.left = newX + "px";
+        noBtn.style.top = newY + "px";
+      }
     });
 
-    // YES button clicked
+    // YES clicked
     function yesClicked() {
       mainCard.style.display = "none";
       celebration.style.display = "flex";
@@ -167,7 +174,6 @@
       startHeartRain();
     }
 
-    // Falling roses
     function startRoses() {
       setInterval(() => {
         const rose = document.createElement("div");
@@ -180,7 +186,6 @@
       }, 200);
     }
 
-    // Heavy hearts rain
     function startHeartRain() {
       setInterval(() => {
         const heart = document.createElement("div");
@@ -194,6 +199,5 @@
       }, 150);
     }
   </script>
-
 </body>
 </html>
