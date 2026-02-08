@@ -31,10 +31,9 @@
       color: #ff4d6d;
     }
 
-    /* FLEX CONTAINER FOR BUTTONS */
+    /* BUTTONS FLEX CONTAINER */
     .buttons {
-      display: flex;
-      justify-content: center;
+      display: inline-flex; /* keep buttons side by side */
       gap: 20px;
       position: relative;
     }
@@ -46,7 +45,6 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.2s;
-      position: relative;
     }
 
     #yesBtn {
@@ -54,11 +52,10 @@
       color: white;
     }
 
-    /* NO BUTTON MOVES FREELY */
     #noBtn {
       background: #999;
       color: white;
-      position: absolute; /* absolute for moving on hover */
+      position: absolute; /* absolute for hover movement */
       z-index: 10;
     }
 
@@ -104,7 +101,7 @@
   <div class="container" id="mainPage">
     <h1>Will you be my Valentine? 💘</h1>
 
-    <!-- BUTTONS FLEX CONTAINER -->
+    <!-- BUTTONS -->
     <div class="buttons">
       <button id="yesBtn" onclick="yesClicked()">YES 💖</button>
       <button id="noBtn" onmouseover="moveNo()">NO 🙃</button>
@@ -117,17 +114,17 @@
   </div>
 
   <script>
-    // INITIAL POSITION: place NO next to YES
+    // INITIAL POSITION: place NO immediately to the right of YES
     window.onload = function() {
       const yesBtn = document.getElementById("yesBtn");
       const noBtn = document.getElementById("noBtn");
 
       const rect = yesBtn.getBoundingClientRect();
-      noBtn.style.left = rect.right + 20 + "px";
+      noBtn.style.left = rect.right + 10 + "px"; // 10px gap
       noBtn.style.top = rect.top + "px";
     }
 
-    // MOVE NO BUTTON
+    // MOVE NO BUTTON ON HOVER
     function moveNo() {
       const noBtn = document.getElementById("noBtn");
       const btnWidth = noBtn.offsetWidth;
@@ -143,37 +140,36 @@
       noBtn.style.top = y + "px";
     }
 
-    // YES BUTTON CLICK -> LANDING
+    // YES BUTTON CLICK -> SHOW LANDING
     function yesClicked() {
       document.getElementById("mainPage").style.display = "none";
-      document.getElementById("noBtn").style.display = "none"; 
+      document.getElementById("noBtn").style.display = "none";
       const landing = document.getElementById("landing");
       landing.style.display = "block";
 
       createFallingItems();
     }
 
-    // FALLING HEARTS & ROSES HEAVIER
+    // HEAVY FALLING HEARTS & ROSES
     function createFallingItems() {
       const symbols = ["💖","❤️","🌹"];
       const landing = document.getElementById("landing");
 
       setInterval(() => {
-        // Create 3 items at once for heavier effect
         for (let i = 0; i < 3; i++) {
           const span = document.createElement("span");
           span.classList.add("falling");
           span.innerText = symbols[Math.floor(Math.random() * symbols.length)];
           span.style.left = Math.random() * window.innerWidth + "px";
-          span.style.fontSize = 25 + Math.random() * 35 + "px"; // bigger
-          span.style.animationDuration = 3 + Math.random() * 4 + "s"; // faster fall
+          span.style.fontSize = 25 + Math.random() * 35 + "px";
+          span.style.animationDuration = 3 + Math.random() * 4 + "s";
           landing.appendChild(span);
 
           setTimeout(() => {
             landing.removeChild(span);
           }, 8000);
         }
-      }, 200); // smaller interval = more items
+      }, 200);
     }
   </script>
 
