@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Be My Valentine 💖</title>
   <style>
-    /* GENERAL STYLES */
     body, html {
       margin: 0;
       padding: 0;
@@ -12,6 +11,7 @@
       font-family: Arial, sans-serif;
       overflow: hidden;
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      position: relative;
     }
 
     .container {
@@ -38,22 +38,26 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.2s;
-      position: relative;
     }
 
     #yesBtn {
       background: #ff4d6d;
       color: white;
       margin-right: 20px;
+      position: relative;
     }
 
+    /* NO button is now positioned relative to body */
     #noBtn {
       background: #999;
       color: white;
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
     }
 
-    /* LANDING PAGE */
     #landing {
       display: none;
       width: 100%;
@@ -96,9 +100,10 @@
   <div class="container" id="mainPage">
     <h1>Will you be my Valentine? 💘</h1>
     <button id="yesBtn" onclick="yesClicked()">YES 💖</button>
-    <button id="noBtn" onmouseover="moveNo()">NO 🙃</button>
-    <p id="message" style="margin-top:20px;font-size:20px;color:#ff4d6d;"></p>
   </div>
+
+  <!-- NO BUTTON MOVING -->
+  <button id="noBtn" onmouseover="moveNo()">NO 🙃</button>
 
   <!-- LANDING PAGE -->
   <div id="landing">
@@ -106,15 +111,14 @@
   </div>
 
   <script>
-    // MOVE NO BUTTON WITHOUT DISAPPEARING
     function moveNo() {
       const noBtn = document.getElementById("noBtn");
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
 
-      // Calculate max X and Y to keep button fully inside viewport
-      const maxX = window.innerWidth - btnWidth - 100; // 10px margin
-      const maxY = window.innerHeight - btnHeight - 100;
+      // Keep button inside viewport
+      const maxX = window.innerWidth - btnWidth - 10;
+      const maxY = window.innerHeight - btnHeight - 10;
 
       const x = Math.random() * maxX;
       const y = Math.random() * maxY;
@@ -123,17 +127,15 @@
       noBtn.style.top = y + "px";
     }
 
-    // YES BUTTON CLICK -> SHOW LANDING PAGE
     function yesClicked() {
       document.getElementById("mainPage").style.display = "none";
+      document.getElementById("noBtn").style.display = "none"; // hide NO button
       const landing = document.getElementById("landing");
       landing.style.display = "block";
 
-      // Start falling hearts and roses
       createFallingItems();
     }
 
-    // FALLING HEARTS & ROSES
     function createFallingItems() {
       const symbols = ["💖","❤️","🌹"];
       const landing = document.getElementById("landing");
@@ -147,7 +149,6 @@
         span.style.animationDuration = 3 + Math.random() * 5 + "s";
         landing.appendChild(span);
 
-        // remove after animation
         setTimeout(() => {
           landing.removeChild(span);
         }, 8000);
