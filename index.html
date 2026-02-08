@@ -140,33 +140,21 @@
     const mainCard = document.getElementById("mainCard");
     const celebration = document.getElementById("celebration");
 
-    // Infinite chase NO button
-    document.addEventListener("mousemove", (e) => {
-      const rect = noBtn.getBoundingClientRect();
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      const btnX = rect.left + rect.width / 2;
-      const btnY = rect.top + rect.height / 2;
+    // Move NO button randomly when hovered
+    noBtn.addEventListener("mouseenter", () => {
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+      const maxX = window.innerWidth - btnWidth;
+      const maxY = window.innerHeight - btnHeight;
 
-      const distance = Math.hypot(mouseX - btnX, mouseY - btnY);
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
 
-      if (distance < 150) { // mouse is close
-        const offsetX = (btnX - mouseX) / distance * 120;
-        const offsetY = (btnY - mouseY) / distance * 120;
-
-        let newX = rect.left + offsetX;
-        let newY = rect.top + offsetY;
-
-        // CLAMP so button never goes offscreen
-        newX = Math.max(0, Math.min(window.innerWidth - rect.width, newX));
-        newY = Math.max(0, Math.min(window.innerHeight - rect.height, newY));
-
-        noBtn.style.left = newX + "px";
-        noBtn.style.top = newY + "px";
-      }
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
     });
 
-    // YES clicked
+    // YES button clicked
     function yesClicked() {
       mainCard.style.display = "none";
       celebration.style.display = "flex";
@@ -201,5 +189,6 @@
       }, 150);
     }
   </script>
+
 </body>
 </html>
