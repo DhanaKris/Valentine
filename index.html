@@ -25,36 +25,36 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Prompt card */
+    /* Bigger Prompt Card */
     .card {
       background: rgba(255, 255, 255, 0.95);
-      padding: 50px 60px;
-      border-radius: 30px;
+      padding: 70px 80px;
+      border-radius: 36px;
       text-align: center;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+      box-shadow: 0 20px 55px rgba(0,0,0,0.3);
       position: relative;
       z-index: 10;
-      width: 520px;
-      height: 300px;
+      width: 640px;
+      height: 380px;
     }
 
     h1 {
-      font-size: 38px;
-      margin-bottom: 35px;
+      font-size: 44px;
+      margin-bottom: 45px;
       color: #ff2e63;
     }
 
     .buttons {
       position: relative;
-      height: 80px;
+      height: 100px;
       width: 100%;
     }
 
     button {
-      font-size: 22px;
-      padding: 14px 34px;
+      font-size: 24px;
+      padding: 16px 40px;
       border: none;
-      border-radius: 40px;
+      border-radius: 50px;
       cursor: pointer;
       transition: transform 0.2s;
       position: absolute;
@@ -64,82 +64,73 @@
     #yesBtn {
       background: linear-gradient(45deg, #ff2e63, #ff6f91);
       color: white;
-      left: 90px;
+      left: 140px;
       box-shadow: 0 6px 15px rgba(255,46,99,0.5);
     }
 
-    #yesBtn:hover {
-      transform: scale(1.1);
-    }
+    #yesBtn:hover { transform: scale(1.1); }
 
     #noBtn {
       background: #adb5bd;
       color: white;
-      left: 280px;
+      left: 360px;
       z-index: 999;
     }
 
     /* Floating hearts */
     .heart {
-      position: absolute;
+      position: fixed;
       color: rgba(255,255,255,0.9);
-      font-size: 20px;
       animation: floatUp linear infinite;
       user-select: none;
       pointer-events: none;
     }
 
     @keyframes floatUp {
-      from { transform: translateY(100vh) scale(1); opacity: 1; }
-      to { transform: translateY(-10vh) scale(1.6); opacity: 0; }
+      from { transform: translateY(110vh) scale(1); opacity: 1; }
+      to { transform: translateY(-10vh) scale(1.5); opacity: 0; }
     }
 
     /* Celebration screen */
     .celebration {
       display: none;
-      position: absolute;
+      position: fixed;
       inset: 0;
       background: radial-gradient(circle at top, #fff0f3, #ff4d6d);
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      animation: popIn 0.8s ease forwards;
       text-align: center;
       z-index: 20;
     }
 
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
     .celebration h1 {
-      font-size: 50px;
+      font-size: 56px;
       color: #fff;
       text-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     .celebration p {
-      font-size: 26px;
+      font-size: 28px;
       color: white;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     /* Falling roses */
     .rose {
-      position: absolute;
-      font-size: 32px;
-      animation: fall 6s linear infinite;
+      position: fixed;
+      font-size: 36px;
+      animation: fall linear infinite;
       user-select: none;
       pointer-events: none;
     }
 
-    /* Heavy hearts rain */
+    /* Falling hearts celebration */
     .bigHeart {
-      position: absolute;
-      font-size: 28px;
-      animation: fall 5s linear infinite;
+      position: fixed;
+      font-size: 32px;
+      animation: fall linear infinite;
       user-select: none;
       pointer-events: none;
     }
@@ -151,11 +142,10 @@
 
     /* Confetti */
     .confetti {
-      position: absolute;
+      position: fixed;
       width: 10px;
       height: 10px;
-      background: red;
-      animation: confettiFall 3s linear infinite;
+      animation: confettiFall linear infinite;
       pointer-events: none;
     }
 
@@ -187,19 +177,28 @@
     const celebration = document.getElementById("celebration");
     const mainCard = document.getElementById("mainCard");
 
-    /* Move NO button anywhere on screen but keep it visible */
+    /* Move NO button anywhere but keep visible */
     function moveNo() {
-      const btnRect = noBtn.getBoundingClientRect();
-      const maxX = window.innerWidth - btnRect.width - 20;
-      const maxY = window.innerHeight - btnRect.height - 20;
-
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
-
+      const rect = noBtn.getBoundingClientRect();
+      const maxX = window.innerWidth - rect.width - 20;
+      const maxY = window.innerHeight - rect.height - 20;
       noBtn.style.position = "fixed";
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
     }
+
+    /* Background floating hearts forever */
+    function spawnBackgroundHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 22 + 18 + "px";
+      heart.style.animationDuration = Math.random() * 4 + 5 + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 9000);
+    }
+    setInterval(spawnBackgroundHeart, 300);
 
     /* YES clicked */
     function yesClicked() {
@@ -211,57 +210,44 @@
       startHeartRain();
     }
 
-    /* Floating hearts */
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "💖";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 22 + 18 + "px";
-      heart.style.animationDuration = Math.random() * 3 + 4 + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 7000);
-    }
-    setInterval(createHeart, 450);
-
-    /* Confetti */
+    /* Infinite confetti */
     function startConfetti() {
       setInterval(() => {
-        const confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.style.left = Math.random() * 100 + "vw";
-        confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-        confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 4000);
-      }, 90);
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        c.style.animationDuration = Math.random() * 2 + 2 + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }, 70);
     }
 
-    /* Falling roses */
+    /* Infinite roses */
     function startRoses() {
       setInterval(() => {
-        const rose = document.createElement("div");
-        rose.className = "rose";
-        rose.innerHTML = "🌹";
-        rose.style.left = Math.random() * 100 + "vw";
-        rose.style.animationDuration = Math.random() * 3 + 4 + "s";
-        document.body.appendChild(rose);
-        setTimeout(() => rose.remove(), 7000);
-      }, 180);
+        const r = document.createElement("div");
+        r.className = "rose";
+        r.innerHTML = "🌹";
+        r.style.left = Math.random() * 100 + "vw";
+        r.style.animationDuration = Math.random() * 3 + 4 + "s";
+        document.body.appendChild(r);
+        setTimeout(() => r.remove(), 7000);
+      }, 120);
     }
 
-    /* Heavy hearts rain */
+    /* Infinite heart rain */
     function startHeartRain() {
       setInterval(() => {
-        const heart = document.createElement("div");
-        heart.className = "bigHeart";
-        heart.innerHTML = "💗";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = Math.random() * 28 + 22 + "px";
-        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 7000);
-      }, 140);
+        const h = document.createElement("div");
+        h.className = "bigHeart";
+        h.innerHTML = "💗";
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.fontSize = Math.random() * 30 + 22 + "px";
+        h.style.animationDuration = Math.random() * 2 + 3 + "s";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 7000);
+      }, 90);
     }
   </script>
 
