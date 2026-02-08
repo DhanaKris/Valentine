@@ -140,12 +140,14 @@
     const mainCard = document.getElementById("mainCard");
     const celebration = document.getElementById("celebration");
 
-    // Move NO button randomly when hovered
+    // NO button moves randomly when hovered, always inside screen
     noBtn.addEventListener("mouseenter", () => {
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
-      const maxX = window.innerWidth - btnWidth;
-      const maxY = window.innerHeight - btnHeight;
+
+      // Max position to stay fully visible
+      const maxX = window.innerWidth - btnWidth - 5;
+      const maxY = window.innerHeight - btnHeight - 5;
 
       const randomX = Math.random() * maxX;
       const randomY = Math.random() * maxY;
@@ -154,7 +156,7 @@
       noBtn.style.top = randomY + "px";
     });
 
-    // YES button clicked
+    // YES clicked
     function yesClicked() {
       mainCard.style.display = "none";
       celebration.style.display = "flex";
