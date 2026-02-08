@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <title>Be My Valentine 💖</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
-      height: 100vh;
       font-family: "Segoe UI", sans-serif;
+      height: 100vh;
       background: linear-gradient(270deg, #ff4d6d, #ff9a9e, #fad0c4, #ffb703);
       background-size: 800% 800%;
       animation: gradientMove 10s ease infinite;
@@ -17,6 +16,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      position: relative;
     }
 
     @keyframes gradientMove {
@@ -25,9 +25,9 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Main card */
+    /* Card */
     .card {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255,255,255,0.92);
       padding: 40px 50px;
       border-radius: 25px;
       text-align: center;
@@ -44,11 +44,7 @@
       color: #ff2e63;
     }
 
-    .buttons {
-      margin-top: 20px;
-      position: relative;
-      height: 100px;
-    }
+    .buttons { position: relative; height: 100px; }
 
     button {
       font-size: 20px;
@@ -74,23 +70,8 @@
       color: white;
       left: 230px;
       top: 0;
-      position: fixed;
       z-index: 999;
-    }
-
-    /* Floating hearts */
-    .heart {
-      position: fixed;
-      color: rgba(255,255,255,0.85);
-      font-size: 20px;
-      animation: floatUp linear infinite;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    @keyframes floatUp {
-      from { transform: translateY(110vh) scale(1); opacity: 1; }
-      to { transform: translateY(-10vh) scale(1.6); opacity: 0; }
+      position: absolute;
     }
 
     /* Celebration screen */
@@ -119,41 +100,17 @@
       margin-bottom: 40px;
     }
 
-    /* Falling roses */
-    .rose {
+    /* Falling hearts and roses */
+    .falling {
       position: fixed;
-      font-size: 34px;
-      animation: fall linear infinite;
       user-select: none;
       pointer-events: none;
-    }
-
-    /* Falling hearts */
-    .bigHeart {
-      position: fixed;
-      font-size: 30px;
       animation: fall linear infinite;
-      user-select: none;
-      pointer-events: none;
     }
 
     @keyframes fall {
       from { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
       to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
-
-    /* Confetti */
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      animation: confettiFall linear infinite;
-      pointer-events: none;
-    }
-
-    @keyframes confettiFall {
-      from { transform: translateY(-10vh) rotate(0deg); }
-      to { transform: translateY(110vh) rotate(720deg); }
     }
   </style>
 </head>
@@ -164,11 +121,9 @@
     <h1>Will you be my Valentine? 💖</h1>
     <div class="buttons">
       <button id="yesBtn" onclick="yesClicked()">YES 💘</button>
+      <button id="noBtn">NO 🙃</button>
     </div>
   </div>
-
-  <!-- NO button (free roaming) -->
-  <button id="noBtn" onmouseenter="moveNo()">NO 🙃</button>
 
   <!-- Celebration Screen -->
   <div class="celebration" id="celebration">
@@ -181,73 +136,56 @@
     const celebration = document.getElementById("celebration");
     const mainCard = document.getElementById("mainCard");
 
-    /* Move NO anywhere on screen */
-    function moveNo() {
+    // NO button chases mouse
+    document.addEventListener("mousemove", (e) => {
       const rect = noBtn.getBoundingClientRect();
-      const maxX = window.innerWidth - rect.width - 10;
-      const maxY = window.innerHeight - rect.height - 10;
-      noBtn.style.left = Math.random() * maxX + "px";
-      noBtn.style.top = Math.random() * maxY + "px";
-    }
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      const btnX = rect.left + rect.width / 2;
+      const btnY = rect.top + rect.height / 2;
 
-    /* Background floating hearts forever */
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "💖";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 20 + 18 + "px";
-      heart.style.animationDuration = Math.random() * 3 + 4 + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 7000);
-    }
-    setInterval(createHeart, 400);
+      const distance = Math.hypot(mouseX - btnX, mouseY - btnY);
 
-    /* YES clicked */
+      if (distance < 120) {
+        const offsetX = (btnX - mouseX) / distance * 50;
+        const offsetY = (btnY - mouseY) / distance * 50;
+
+        let newX = rect.left + offsetX;
+        let newY = rect.top + offsetY;
+
+        newX = Math.min(Math.max(0, newX), window.innerWidth - rect.width);
+        newY = Math.min(Math.max(0, newY), window.innerHeight - rect.height);
+
+        noBtn.style.left = newX + "px";
+        noBtn.style.top = newY + "px";
+      }
+    });
+
+    // YES clicked
     function yesClicked() {
       mainCard.style.display = "none";
-      noBtn.style.display = "none";
       celebration.style.display = "flex";
-      startConfetti();
-      startRoses();
-      startHeartRain();
+      startFalling("💖", 100); // hearts
+      startFalling("🌹", 80);  // roses
     }
 
-    function startConfetti() {
-      setInterval(() => {
-        const c = document.createElement("div");
-        c.className = "confetti";
-        c.style.left = Math.random() * 100 + "vw";
-        c.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-        c.style.animationDuration = Math.random() * 2 + 2 + "s";
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 4000);
-      }, 80);
+    // Falling hearts and roses
+    function startFalling(symbol, count) {
+      for (let i = 0; i < count; i++) {
+        createFalling(symbol);
+      }
+      setInterval(() => createFalling(symbol), 300); // continuous
     }
 
-    function startRoses() {
-      setInterval(() => {
-        const r = document.createElement("div");
-        r.className = "rose";
-        r.innerHTML = "🌹";
-        r.style.left = Math.random() * 100 + "vw";
-        r.style.animationDuration = Math.random() * 3 + 4 + "s";
-        document.body.appendChild(r);
-        setTimeout(() => r.remove(), 7000);
-      }, 140);
-    }
-
-    function startHeartRain() {
-      setInterval(() => {
-        const h = document.createElement("div");
-        h.className = "bigHeart";
-        h.innerHTML = "💗";
-        h.style.left = Math.random() * 100 + "vw";
-        h.style.fontSize = Math.random() * 30 + 22 + "px";
-        h.style.animationDuration = Math.random() * 2 + 3 + "s";
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 7000);
-      }, 110);
+    function createFalling(symbol) {
+      const div = document.createElement("div");
+      div.className = "falling";
+      div.innerHTML = symbol;
+      div.style.left = Math.random() * 100 + "vw";
+      div.style.fontSize = Math.random() * 30 + 20 + "px";
+      div.style.animationDuration = Math.random() * 3 + 4 + "s";
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 7000);
     }
   </script>
 
