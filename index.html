@@ -31,14 +31,6 @@
       color: #ff4d6d;
     }
 
-    /* FLEX CONTAINER FOR BUTTONS */
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      position: relative;
-    }
-
     button {
       font-size: 18px;
       padding: 12px 25px;
@@ -54,11 +46,11 @@
       color: white;
     }
 
-    /* NO BUTTON MOVES FREELY */
+    /* NO button starts next to YES */
     #noBtn {
       background: #999;
       color: white;
-      position: absolute; /* absolute for moving on hover */
+      position: absolute;
       z-index: 10;
     }
 
@@ -103,36 +95,38 @@
   <!-- MAIN PAGE -->
   <div class="container" id="mainPage">
     <h1>Will you be my Valentine? 💘</h1>
-
-    <!-- BUTTONS FLEX CONTAINER -->
-    <div class="buttons">
-      <button id="yesBtn" onclick="yesClicked()">YES 💖</button>
-      <button id="noBtn" onmouseover="moveNo()">NO 🙃</button>
-    </div>
+    <button id="yesBtn" onclick="yesClicked()">YES 💖</button>
   </div>
+
+  <!-- NO BUTTON MOVING -->
+  <button id="noBtn" onmouseover="moveNo()">NO 🙃</button>
 
   <!-- LANDING PAGE -->
   <div id="landing">
-    <h1>Yay! 💕 Happy Valentine’s Day! 🌹</h1>
+    <h1>Yay! 💕 Thank you for being part of my life and making it magical 💖🌹</h1>
   </div>
 
   <script>
-    // INITIAL POSITION: place NO next to YES
+    // PLACE NO NEXT TO YES INITIALLY
     window.onload = function() {
       const yesBtn = document.getElementById("yesBtn");
       const noBtn = document.getElementById("noBtn");
 
+      // Get YES button position
       const rect = yesBtn.getBoundingClientRect();
+
+      // Place NO 20px to the right
       noBtn.style.left = rect.right + 20 + "px";
       noBtn.style.top = rect.top + "px";
     }
 
-    // MOVE NO BUTTON
+    // MOVE NO BUTTON WITHOUT DISAPPEARING
     function moveNo() {
       const noBtn = document.getElementById("noBtn");
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
 
+      // Keep button inside viewport
       const maxX = window.innerWidth - btnWidth - 10;
       const maxY = window.innerHeight - btnHeight - 10;
 
@@ -143,37 +137,34 @@
       noBtn.style.top = y + "px";
     }
 
-    // YES BUTTON CLICK -> LANDING
+    // YES BUTTON CLICK -> SHOW LANDING PAGE
     function yesClicked() {
       document.getElementById("mainPage").style.display = "none";
-      document.getElementById("noBtn").style.display = "none"; 
+      document.getElementById("noBtn").style.display = "none"; // hide NO button
       const landing = document.getElementById("landing");
       landing.style.display = "block";
 
       createFallingItems();
     }
 
-    // FALLING HEARTS & ROSES HEAVIER
+    // FALLING HEARTS & ROSES
     function createFallingItems() {
       const symbols = ["💖","❤️","🌹"];
       const landing = document.getElementById("landing");
 
       setInterval(() => {
-        // Create 3 items at once for heavier effect
-        for (let i = 0; i < 3; i++) {
-          const span = document.createElement("span");
-          span.classList.add("falling");
-          span.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-          span.style.left = Math.random() * window.innerWidth + "px";
-          span.style.fontSize = 25 + Math.random() * 35 + "px"; // bigger
-          span.style.animationDuration = 3 + Math.random() * 4 + "s"; // faster fall
-          landing.appendChild(span);
+        const span = document.createElement("span");
+        span.classList.add("falling");
+        span.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        span.style.left = Math.random() * window.innerWidth + "px";
+        span.style.fontSize = 20 + Math.random() * 30 + "px";
+        span.style.animationDuration = 3 + Math.random() * 5 + "s";
+        landing.appendChild(span);
 
-          setTimeout(() => {
-            landing.removeChild(span);
-          }, 8000);
-        }
-      }, 200); // smaller interval = more items
+        setTimeout(() => {
+          landing.removeChild(span);
+        }, 8000);
+      }, 300);
     }
   </script>
 
