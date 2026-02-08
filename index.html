@@ -99,12 +99,22 @@
       margin-bottom: 40px;
     }
 
-    .falling {
-      position: fixed;
+    /* Falling roses */
+    .rose {
+      position: absolute;
+      font-size: 32px;
+      animation: fall 6s linear infinite;
       user-select: none;
       pointer-events: none;
-      animation: fall linear infinite;
-      z-index: 5;
+    }
+
+    /* Heavy hearts rain */
+    .bigHeart {
+      position: absolute;
+      font-size: 28px;
+      animation: fall 5s linear infinite;
+      user-select: none;
+      pointer-events: none;
     }
 
     @keyframes fall {
@@ -115,14 +125,16 @@
 </head>
 <body>
 
+  <!-- Main Question Card -->
   <div class="card" id="mainCard">
     <h1>Will you be my Valentine? 💖</h1>
-    <div class="buttons">
+    <div class="buttons" id="buttonArea">
       <button id="yesBtn" onclick="yesClicked()">YES 💘</button>
       <button id="noBtn">NO 🙃</button>
     </div>
   </div>
 
+  <!-- Celebration Screen -->
   <div class="celebration" id="celebration">
     <h1>YAYYYY!!! 💕🥰</h1>
     <p>You just made my heart the happiest 💖</p>
@@ -130,15 +142,15 @@
 
   <script>
     const noBtn = document.getElementById("noBtn");
-    const celebration = document.getElementById("celebration");
     const mainCard = document.getElementById("mainCard");
+    const celebration = document.getElementById("celebration");
 
-    // NO button moves randomly on hover
+    // NO button moves anywhere on the screen when hovered
     noBtn.addEventListener("mouseenter", () => {
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
-      const maxX = window.innerWidth - btnWidth - 10;
-      const maxY = window.innerHeight - btnHeight - 10;
+      const maxX = window.innerWidth - btnWidth;
+      const maxY = window.innerHeight - btnHeight;
 
       const randomX = Math.random() * maxX;
       const randomY = Math.random() * maxY;
@@ -151,27 +163,36 @@
     function yesClicked() {
       mainCard.style.display = "none";
       celebration.style.display = "flex";
+      startRoses();
+      startHeartRain();
     }
 
-    // Create falling hearts and roses
-    function createFalling(symbol) {
-      const div = document.createElement("div");
-      div.className = "falling";
-      div.innerHTML = symbol;
-      div.style.left = Math.random() * 100 + "vw";
-      div.style.fontSize = Math.random() * 30 + 20 + "px";
-      div.style.animationDuration = Math.random() * 3 + 4 + "s";
-      document.body.appendChild(div);
-      setTimeout(() => div.remove(), 7000);
+    // Falling roses
+    function startRoses() {
+      setInterval(() => {
+        const rose = document.createElement("div");
+        rose.className = "rose";
+        rose.innerHTML = "🌹";
+        rose.style.left = Math.random() * 100 + "vw";
+        rose.style.animationDuration = Math.random() * 3 + 4 + "s";
+        celebration.appendChild(rose);
+        setTimeout(() => rose.remove(), 7000);
+      }, 200);
     }
 
-    function startFalling() {
-      setInterval(() => createFalling("💖"), 150);
-      setInterval(() => createFalling("🌹"), 200);
+    // Heavy hearts rain
+    function startHeartRain() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "bigHeart";
+        heart.innerHTML = "💗";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = Math.random() * 25 + 25 + "px";
+        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+        celebration.appendChild(heart);
+        setTimeout(() => heart.remove(), 7000);
+      }, 150);
     }
-
-    // Start falling only when YES is clicked
-    document.getElementById("yesBtn").addEventListener("click", startFalling);
   </script>
 
 </body>
