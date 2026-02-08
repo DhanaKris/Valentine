@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Be My Valentine 💖</title>
   <style>
+    /* GENERAL STYLES */
     body, html {
       margin: 0;
       padding: 0;
@@ -50,9 +51,12 @@
       background: #999;
       color: white;
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
-    /* Landing Page */
+    /* LANDING PAGE */
     #landing {
       display: none;
       width: 100%;
@@ -91,6 +95,7 @@
 </head>
 <body>
 
+  <!-- MAIN PAGE -->
   <div class="container" id="mainPage">
     <h1>Will you be my Valentine? 💘</h1>
     <button id="yesBtn" onclick="yesClicked()">YES 💖</button>
@@ -98,21 +103,30 @@
     <p id="message" style="margin-top:20px;font-size:20px;color:#ff4d6d;"></p>
   </div>
 
+  <!-- LANDING PAGE -->
   <div id="landing">
     <h1>Yay! 💕 Happy Valentine’s Day! 🌹</h1>
   </div>
 
   <script>
-    // Move the NO button randomly
+    // MOVE NO BUTTON WITHOUT DISAPPEARING
     function moveNo() {
       const noBtn = document.getElementById("noBtn");
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 100);
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+
+      // keep button inside viewport
+      const maxX = window.innerWidth - btnWidth - 10;
+      const maxY = window.innerHeight - btnHeight - 10;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
     }
 
-    // YES button click
+    // YES BUTTON CLICK -> SHOW LANDING PAGE
     function yesClicked() {
       document.getElementById("mainPage").style.display = "none";
       const landing = document.getElementById("landing");
@@ -122,7 +136,7 @@
       createFallingItems();
     }
 
-    // Function to generate falling hearts and roses
+    // FALLING HEARTS & ROSES
     function createFallingItems() {
       const symbols = ["💖","❤️","🌹"];
       const landing = document.getElementById("landing");
@@ -136,7 +150,7 @@
         span.style.animationDuration = 3 + Math.random() * 5 + "s";
         landing.appendChild(span);
 
-        // Remove after animation to avoid clutter
+        // remove after animation
         setTimeout(() => {
           landing.removeChild(span);
         }, 8000);
