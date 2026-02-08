@@ -148,24 +148,28 @@
     }
 
     // FALLING HEARTS & ROSES
-    function createFallingItems() {
-      const symbols = ["💖","❤️","🌹"];
-      const landing = document.getElementById("landing");
+function createFallingItems() {
+  const symbols = ["💖","❤️","🌹"];
+  const landing = document.getElementById("landing");
 
-      setInterval(() => {
-        const span = document.createElement("span");
-        span.classList.add("falling");
-        span.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-        span.style.left = Math.random() * window.innerWidth + "px";
-        span.style.fontSize = 20 + Math.random() * 30 + "px";
-        span.style.animationDuration = 3 + Math.random() * 5 + "s";
-        landing.appendChild(span);
+  setInterval(() => {
+    // create 3 items at once for a heavier effect
+    for (let i = 0; i < 3; i++) {
+      const span = document.createElement("span");
+      span.classList.add("falling");
+      span.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+      span.style.left = Math.random() * window.innerWidth + "px";
+      span.style.fontSize = 25 + Math.random() * 35 + "px"; // bigger size
+      span.style.animationDuration = 3 + Math.random() * 4 + "s"; // faster fall
+      landing.appendChild(span);
 
-        setTimeout(() => {
-          landing.removeChild(span);
-        }, 8000);
-      }, 300);
+      // remove after 8 seconds
+      setTimeout(() => {
+        landing.removeChild(span);
+      }, 8000);
     }
+  }, 200); // smaller interval = more items
+}
   </script>
 
 </body>
